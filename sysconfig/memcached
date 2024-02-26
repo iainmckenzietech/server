@@ -1,0 +1,43 @@
+
+
+# TLS encryption
+#-Z tls
+#-Z tls_cert=/path/to/server.crt
+#-Z tls_key=/path/to/server.key
+
+
+log_level: 5
+mech_list: SCRAM-SHA-512
+sasldb_path: /etc/sasl2/memcached-sasldb2
+
+
+# Enable SASL
+-S 
+
+# Require auth for all connections  
+-a SCRAM-SHA-512
+
+
+# Disable UDP protocol
+-U 0 
+
+# Set max object size
+-I 16m
+
+# Disable version banner 
+-V
+
+# Path to sasldb
+-A /etc/sasl2/memcached-sasldb2
+
+# Log level
+-vv
+
+# Firewall rules
+
+
+# Permissions
+USER="memcached"
+MAXCONN="2048"
+CACHESIZE="128"
+OPTIONS="-p 11211 -l 127.0.0.1 -vvvv"
