@@ -1,0 +1,76 @@
+[DEFAULT]
+ignoreip = 127.0.0.1/8 185.69.144.125 
+bantime = 21600
+findtime = 600
+maxretry = 10
+
+backend = auto
+
+usedns = warn
+destemail = logs@techaura.co.uk
+banaction = iptables-multiport
+mta = sendmail
+protocol = tcp
+chain = INPUT
+
+
+# The simplest action to take: ban only
+action_ = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+# ban & send an e-mail with whois report to the destemail.
+action_mw = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+%(mta)s-whois[name=%(__name__)s, dest="%(destemail)s", protoc
+ol="%(protocol)s", chain="%(chain)s"]
+# ban & send an e-mail with whois report and relevant log lines to the destemail.
+action_mwl = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+%(mta)s-whois-lines[name=%(__name__)s, dest="%(destemail)s", logpath=%(logpath)s, chain="%(chain)s"]
+
+action = %(action_)s
+
+
+
+
+[wordpress-hard]
+enabled = true
+filter = wordpress-hard
+logpath = /var/log/secure
+maxretry = 1
+port = http,https
+
+[wordpress-extra]
+enabled = true
+filter = wordpress-extra
+logpath = /var/log/secure
+maxretry = 3
+port = http,https
+
+
+
+#[wordpress_imboxing]
+#enabled = true
+#filter = wordpress
+#logpath = /srv/websites/*/logs/access.log
+#action = csf-ip-deny[name=wordpress]
+#        sendmail-whois[name=apache-auth]
+#port = http,https
+#maxretry = 10
+
+[sshd]
+enabled = true
+action = csf-ip-deny[name=ssh]
+        sendmail-whois[name=sshd]
+maxretry = 10
+findtime = 43200
+bantime = 86400
+ignoreip = 127.0.0.1
+
+
+
+
+
+
+
+
+
+
+
+
